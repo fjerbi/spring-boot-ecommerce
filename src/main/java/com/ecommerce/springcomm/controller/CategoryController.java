@@ -6,6 +6,7 @@ package com.ecommerce.springcomm.controller;
 
 import com.ecommerce.springcomm.model.Category;
 import com.ecommerce.springcomm.service.CategoryService;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +42,7 @@ public class CategoryController {
     }
 
     @PostMapping("/public/categories")
-    public ResponseEntity<String> createCategory (@Valid @RequestBody Category category) {
+    public ResponseEntity<String> createCategory(@Valid @RequestBody Category category) {
         categoryService.createCategory(category);
         return new ResponseEntity<>("Category added Successfully", HttpStatus.OK);
     }
@@ -56,13 +57,14 @@ public class CategoryController {
         }
 
     }
+
     @PutMapping("/public/categories/{categoryId}")
-    public ResponseEntity<String> updateCategory(@RequestBody Category category, @PathVariable Long categoryId){
-        try{
-          Category savedCategory = categoryService.updateCategory(category, categoryId);
-            return new ResponseEntity<>("Category with category ID"+ categoryId+ "saved", HttpStatus.OK);
-        } catch(ResponseStatusException e){
-             return new ResponseEntity<>(e.getReason(), e.getStatusCode());
+    public ResponseEntity<String> updateCategory(@RequestBody Category category, @PathVariable Long categoryId) {
+        try {
+            Category savedCategory = categoryService.updateCategory(category, categoryId);
+            return new ResponseEntity<>("Category with category ID" + categoryId + "saved", HttpStatus.OK);
+        } catch (ResponseStatusException e) {
+            return new ResponseEntity<>(e.getReason(), e.getStatusCode());
         }
     }
 
