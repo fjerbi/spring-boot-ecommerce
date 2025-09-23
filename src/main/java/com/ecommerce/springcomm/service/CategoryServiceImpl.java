@@ -4,6 +4,7 @@ import com.ecommerce.springcomm.exceptions.ApiException;
 import com.ecommerce.springcomm.exceptions.ResourceNotFoundException;
 import com.ecommerce.springcomm.model.Category;
 import com.ecommerce.springcomm.repositories.CategoryRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +15,7 @@ import java.util.List;
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
+    @Autowired
     private final CategoryRepository categoryRepository;
 
     public CategoryServiceImpl(CategoryRepository categoryRepository) {
@@ -22,7 +24,10 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
+        List<Category> categories = categoryRepository.findAll();
+        if (categories.isEmpty())
+            throw new ApiException("No category created until now");
+        return categories;
     }
 
     @Override
@@ -30,8 +35,8 @@ public class CategoryServiceImpl implements CategoryService {
     public void createCategory(Category category) {
         // Let Hibernate generate the ID
         Category savedCategory = categoryRepository.findByCategoryName(category.getCategoryName());
-        if(savedCategory != null)
-            throw new ApiException("Category with the name" + category.getCategoryName()+"already exists");
+        if (savedCategory != null)
+            throw new ApiException("Category with the name" + category.getCategoryName() + "already exists");
         categoryRepository.save(category);
     }
 
