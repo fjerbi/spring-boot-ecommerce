@@ -5,6 +5,8 @@
 package com.ecommerce.springcomm.repositories;
 
 import com.ecommerce.springcomm.model.Category;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -12,5 +14,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author Firas
  */
 public interface CategoryRepository extends JpaRepository<Category, Long>{
-    
+
+    Category findByCategoryName(String categoryName);
 }

@@ -1,5 +1,7 @@
 package com.ecommerce.springcomm.service;
 
+import com.ecommerce.springcomm.exceptions.ApiException;
+import com.ecommerce.springcomm.exceptions.ResourceNotFoundException;
 import com.ecommerce.springcomm.model.Category;
 import com.ecommerce.springcomm.repositories.CategoryRepository;
 import org.springframework.http.HttpStatus;
@@ -27,6 +29,9 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     public void createCategory(Category category) {
         // Let Hibernate generate the ID
+        Category savedCategory = categoryRepository.findByCategoryName(category.getCategoryName());
+        if(savedCategory != null)
+            throw new ApiException("Category with the name" + category.getCategoryName()+"already exists");
         categoryRepository.save(category);
     }
 
@@ -35,7 +40,7 @@ public class CategoryServiceImpl implements CategoryService {
     public String deleteCategory(Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
+                        new ResourceNotFoundException("Category", "categoryId", categoryId));
 
         categoryRepository.delete(category);
         return "Category with ID " + categoryId + " deleted!";
@@ -46,7 +51,7 @@ public class CategoryServiceImpl implements CategoryService {
     public Category updateCategory(Category category, Long categoryId) {
         Category existingCategory = categoryRepository.findById(categoryId)
                 .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
+                        new ResourceNotFoundException("Category", "categoryId", categoryId));
 
         existingCategory.setCategoryName(category.getCategoryName());
         return categoryRepository.save(existingCategory);
